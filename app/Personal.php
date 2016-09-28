@@ -8,7 +8,7 @@ class Personal extends Model
 {
     protected $table = "personal";
     protected $fillable = [
-        'name', 'post', 'lvl','masterId'
+        'name', 'post', 'lvl','masterId','price','startAt'
     ];
 
     protected $hidden = [

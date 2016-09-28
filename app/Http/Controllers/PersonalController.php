@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Personal;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -90,75 +91,100 @@ class PersonalController extends Controller
 
     private function appendNode(&$node,$lvl,$item){
 
-
             $index = count($node);
-
             while($index!=0) {
                 $index--;
-                if (array_key_exists("roleId", $node[$index])) {
-
-                    if ($node[$index]["roleId"]==$lvl)
-                        array_push($node[$index]["children"], $item);
-
+                if (array_key_exists("lvl", $node[$index])) {
+                    if ($node[$index]["lvl"]==$lvl)
+                        array_push($node[$index]["nodes"], $item);
                     else
-                        $this->appendNode($node[$index]["children"], $lvl, $item);
+                        $this->appendNode($node[$index]["nodes"], $lvl, $item);
                 }
-
             }
 
             return;
     }
 
+    public function getTreeNode($id=0) {
+
+        $testArray = array();
+
+        $next =  DB::table("personal")->where("masterId","=",$id)->get();
+
+
+
+
+        foreach ($next as $a) {
+            $add = [
+                'id' => $a->id,
+                'name' => $a->name,
+                'title' => $a->name,
+                'isWork' => $a->isWork,
+                'lvl' => $a->lvl,
+                'post' => $a->post,
+                'masterId' => $a->masterId,
+                'price' => $a->price,
+                'startAt' => $a->startAt,
+                'nodes' => array()
+            ];
+
+            array_push($testArray,$add );
+
+        }
+
+
+            return response()->json( $testArray);
+    }
+
+
     public function getTree(){
 
-        $testArray =   array(["roleName" => "Акакий Семенович Дерикозлы", "roleId" => "role1", "children" => array()]);
-        array_push($testArray[0]["children"], [ "roleName" => "Guest2", "roleId" => "role12", "children" => array()]);
-        array_push($testArray[0]["children"], [ "roleName" => "Guest3", "roleId" => "role13", "children" => array()]);
+        //получаем полное дерево, не сильно здоровская идея, но пусть будет и это тоже
+
+        $maxMasters = DB::table("personal")->max('masterId');
+
+        $mainMaster = DB::table("personal")->where("id","=",DB::table("personal")->min('masterId')+1)->get();
+
+        $testArray = array([
+            'id' =>$mainMaster[0]->id,
+            'name' => $mainMaster[0]->name,
+            'title'=> $mainMaster[0]->name,
+            'isWork' => $mainMaster[0]->isWork,
+            'lvl' => $mainMaster[0]->lvl,
+            'post' => $mainMaster[0]->post,
+            'masterId' => $mainMaster[0]->masterId,
+            'price'=>$mainMaster[0]->price,
+            'startAt'=>$mainMaster[0]->startAt,
+            'nodes' => array()
+        ]);
 
 
-        $this->appendNode( $testArray,"role13",[ "roleName" => "Guest4", "roleId" => "role14", "children" => array()]);
-        $this->appendNode( $testArray,"role1",[ "roleName" => "Guest4", "roleId" => "role14", "children" => array()]);
-        $this->appendNode( $testArray,"role14",[ "roleName" => "Guest4", "roleId" => "role15", "children" => array()]);
-        $this->appendNode( $testArray,"role15",[ "roleName" => "Guest4", "roleId" => "role16", "children" => array()]);
-        $this->appendNode( $testArray,"role16",[ "roleName" => "Guest4", "roleId" => "role17", "children" => array()]);
-        $this->appendNode( $testArray,"role16",[ "roleName" => "Guest4", "roleId" => "role17", "children" => array()]);
-        $this->appendNode( $testArray,"role16",[ "roleName" => "Guest4", "roleId" => "role17", "children" => array()]);
-        return response()->json($testArray);
+            for ($i=1;$i<10;$i++) {
 
-          /*  response()->json(array(
-            ["roleName" => "Акакий Семенович Дерикозлы", "roleId" => "role1", "children" => array(
-            [ "roleName" => "Guest", "roleId" => "role12", "children" => array()],
-            [ "roleName" => "Guest", "roleId" => "role12", "children" => array()],
-            [ "roleName" => "Guest", "roleId" => "role12", "children" => array()],
-            [ "roleName" => "Guest", "roleId" => "role12", "children" => array()],
-            [ "roleName" => "Guest", "roleId" => "role12", "children" => array()]
-            )]
-        ));*/
+                $next =  DB::table("personal")->where("masterId","=",$i)->get();
+
+                foreach ($next as $a) {
+                    $add = [
+                        'id' => $a->id,
+                        'name' => $a->name,
+                        'title'=> $a->name,
+                        'isWork' => $a->isWork,
+                        'lvl' => $a->lvl,
+                        'post' => $a->post,
+                        'masterId' => $a->masterId,
+                        'price' => $a->price,
+                        'startAt' => $a->startAt,
+                        'nodes' => array()
+                    ];
+
+                    $this->appendNode($testArray, $i-1, $add);
+                }
+
+            }
+
+        return response()->json( $testArray );
     }
-    public function search($text=""){
-        //будем искать в 2а этапа: 1 sql выборка через or 2 получим все данные и пройдем по ним циклом и будем выбирать через поиск вхождения
 
-       $personal = DB::table('personal')
-            ->where('id', '=', $text)
-            ->orWhere('name','=',$text)
-            ->orWhere('post','=',$text)
-            ->get();
-
-        return  response()->json(["count"=>$personal->count(),"data"=>$personal]);
-
-        /*return response()->json([
-            "count"=>1,"data"=>array([
-                "id"=>1,
-                "name"=>"test",
-                "isWork"=>1,
-                "lvl"=>4,
-                "post"=>"test post",
-                "masterId"=>0,
-                "created_at"=>null,
-                "updated_at"=>null
-            ])
-        ]);*/
-    }
 
 
 }

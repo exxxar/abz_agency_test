@@ -1,0 +1,23 @@
+{
+  "name": "parking",
+  "description": "тестовый проект для abz.agency",
+  "main": "/public/index.php",
+  "authors": [
+    "Aleks Gukai"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "laravel",
+    "5+",
+    "angularJS",
+    "mysql"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

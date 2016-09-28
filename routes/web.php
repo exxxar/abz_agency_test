@@ -36,4 +36,5 @@ Route::group(['prefix' => 'personal'], function () {
     Route::post('update', [ 'as' => 'update', 'uses' => 'PersonalController@updatePersonal'  ] );
     Route::post('add', [ 'as' => 'add', 'uses' => 'PersonalController@addPersonal'  ] );
     Route::get('getTree', [ 'as' => 'get', 'uses' => 'PersonalController@getTree'  ] );
+    Route::get('getTree/{id?}', [ 'as' => 'get', 'uses' => 'PersonalController@getTreeNode'  ] );
 });

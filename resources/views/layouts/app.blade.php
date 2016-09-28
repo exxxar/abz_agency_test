@@ -12,11 +12,11 @@
 
     <!-- Styles -->
     <link href="{!! asset('css/app.css') !!}" rel="stylesheet">
-    <link href="{!! asset('css/angular.treeview.css') !!}" rel="stylesheet">
+    <link href="{!! asset('../bower_components/angular-ui-tree/dist/angular-ui-tree.min.css') !!}" rel="stylesheet">
 
     <!-- Scripts -->
     <script src="{!! asset('js/app.js') !!}"></script>
-    <script src="{!! asset('js/angular.min.js') !!}"></script>
+    <script src="{!! asset('../bower_components/angular/angular.min.js') !!}"></script>
 
     <script>
         window.Laravel = <?php echo json_encode([
@@ -106,7 +106,10 @@
 
 
     <script src="{!! asset('js/personalController.js') !!}"></script>
+
+    <script type="text/javascript" src="{!! asset('../bower_components/angular-ui-tree/dist/angular-ui-tree.js') !!}"></script>
+
     <script src="{!! asset('js/treeController.js') !!}"></script>
-    <script src="{!! asset('js/angular.treeview.js') !!}"></script>
+
 </body>
 </html>

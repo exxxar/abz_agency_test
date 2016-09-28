@@ -41,14 +41,16 @@ $factory->define(App\Personal::class, function (Faker\Generator $faker) {
             $sname_m[random_int(0, count($sname_m)-1)])." ".
         $tname[random_int(0, count($tname)-1)];
 
-    $i_count = DB::table('personal')->count()==0?
-        0:DB::table('personal')->count()-1;
+  /*  $i_count = DB::table('personal')->count()==0?
+        0:DB::table('personal')->count()-1;*/
 
     return [
         'name' => $male,
         'isWork' => random_int(0, 1),
         'lvl' => random_int(0, 10),
         'post' => $posts[random_int(0, count($posts)-1)],
-        'masterId' => random_int(0,$i_count)
+        'masterId' => random_int(0,10),
+        'price'=>$faker->randomFloat(10000,2000,20000),
+        'startAt'=>$faker->dateTime
     ];
 });

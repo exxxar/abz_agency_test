@@ -20,6 +20,8 @@ class CreatePersonalTable extends Migration
             $table->integer('lvl');
             $table->text('post');
             $table->integer('masterId');
+            $table->double('price');
+            $table->dateTime('startAt');
             $table->timestamps();
         });
     }
